@@ -27,6 +27,7 @@
 		E175231A2DAEADDE00A3EF6D /* Notes.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Notes.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E17523332DAEADE000A3EF6D /* NotesTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = NotesTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		E175233D2DAEADE000A3EF6D /* NotesUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = NotesUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		E17523512DAEAE1000A3EF6D /* .gitignore */ = {isa = PBXFileReference; lastKnownFileType = text; path = .gitignore; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -92,6 +93,7 @@
 				E17523362DAEADE000A3EF6D /* NotesTests */,
 				E17523402DAEADE000A3EF6D /* NotesUITests */,
 				E175231B2DAEADDE00A3EF6D /* Products */,
+				E17523512DAEAE1000A3EF6D /* .gitignore */,
 			);
 			sourceTree = "<group>";
 		};
