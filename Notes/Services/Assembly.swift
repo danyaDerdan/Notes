@@ -7,7 +7,7 @@ protocol AssemblyProtocol {
 
 final class Assembly: AssemblyProtocol {
     func createMainModule() -> UIViewController {
-        return UIViewController()
+        return MainViewController()
     }
     
     func createDetailModule() -> UIViewController {
