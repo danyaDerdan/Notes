@@ -7,6 +7,7 @@ protocol AssemblyProtocol {
 
 final class Assembly: AssemblyProtocol {
     weak var router: RouterProtocol?
+    private let networkService = NetworkService()
     
     func createMainModule() -> UIViewController {
         let view = MainViewController()
@@ -16,6 +17,7 @@ final class Assembly: AssemblyProtocol {
         
         view.output = presenter
         interactor.output = presenter
+        interactor.networkService = networkService
         
         return view
     }
