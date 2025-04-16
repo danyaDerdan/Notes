@@ -13,20 +13,23 @@ final class MainPresenter {
 }
 
 extension MainPresenter: MainInteractorOutput {
-    func didRecieveData(data: [String]) {
+    func didRecieveData(data: [ViewData.Note]) {
         view.updateView(with: data)
     }
 }
 
 extension MainPresenter: MainViewOutput {
+    
     func viewDidLoad() {
         interactor.fetchData()
     }
     
     func tappedNote(with text: String) {
         print("Presenter recieved from view text: \(text)")
-        interactor.fetchData()
     }
     
+    func toggledNote(title: String?) {
+        interactor.toggleNoteWith(title: title ?? "")
+    }
     
 }

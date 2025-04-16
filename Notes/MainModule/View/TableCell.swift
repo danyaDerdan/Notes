@@ -1,8 +1,14 @@
 import UIKit
 
+protocol TableCellOutput: AnyObject {
+    func didTapButton(in cell: TableCell)
+}
+
 final class TableCell: UITableViewCell {
     
-    private var isDone: Bool = false
+    private var isDone: Bool = false { didSet {
+        button.backgroundColor = isDone ? .systemBlue.withAlphaComponent(0.5) : .clear } }
+    weak var output: TableCellOutput?
     
     let titleLabel: UILabel = {
         let label = UILabel()
@@ -39,15 +45,24 @@ final class TableCell: UITableViewCell {
         return button
     }()
     
-    func configure(with text: String) {
+    func configure(with note: ViewData.Note, output: TableCellOutput) {
         setupViews()
-        titleLabel.attributedText = NSMutableAttributedString(string: text, attributes: [.strikethroughStyle: 0])
-        descriptionLabel.text = "Я крутой челик устроюсь на стажу в т банк потом бам бам машина бэха элитная потом хата"
-        dateLabel.text = "9/03/2024"
+        titleLabel.attributedText = NSMutableAttributedString(string: note.title, attributes: [.strikethroughStyle: 0])
+        descriptionLabel.text = note.body
+        dateLabel.text = note.date
+        isDone = note.isDone
+        self.output = output
+        updateTableCell()
     }
     
     override func prepareForReuse() {
         titleLabel.text = nil
+        descriptionLabel.text = nil
+        dateLabel.text = nil
+        button.backgroundColor = .clear
+        titleLabel.textColor = .black
+        dateLabel.textColor = .black
+        descriptionLabel.textColor = .black
     }
 }
 
@@ -63,6 +78,8 @@ private extension TableCell {
         stack.translatesAutoresizingMaskIntoConstraints = false
         stack.axis = .vertical
         stack.alignment = .leading
+        stack.distribution = .fillEqually
+        
         addSubview(stack)
         NSLayoutConstraint.activate([
             
@@ -80,7 +97,11 @@ private extension TableCell {
     
     @objc func buttonTapped() {
         isDone.toggle()
-        button.backgroundColor = isDone ? .systemBlue.withAlphaComponent(0.5) : .clear
+        updateTableCell()
+        output?.didTapButton(in: self)
+    }
+    
+    private func updateTableCell() {
         titleLabel.attributedText = NSMutableAttributedString(string: titleLabel.text ?? "", attributes: [.strikethroughStyle: isDone ? 1 : 0])
         titleLabel.textColor = .black.withAlphaComponent(isDone ? 0.5 : 1)
         descriptionLabel.textColor = .black.withAlphaComponent(isDone ? 0.5 : 1)
