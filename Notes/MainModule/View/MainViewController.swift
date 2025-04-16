@@ -22,8 +22,10 @@ class MainViewController: UIViewController, MainViewInput {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .systemPink
+        view.backgroundColor = .white
         output?.viewDidLoad()
+        title = "Заметки"
+        navigationController?.navigationBar.prefersLargeTitles = true
     }
 
 }
