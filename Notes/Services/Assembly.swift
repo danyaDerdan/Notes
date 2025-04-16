@@ -6,8 +6,18 @@ protocol AssemblyProtocol {
 }
 
 final class Assembly: AssemblyProtocol {
+    weak var router: RouterProtocol?
+    
     func createMainModule() -> UIViewController {
-        return MainViewController()
+        let view = MainViewController()
+        let interactor = MainInteractor()
+        
+        let presenter = MainPresenter(router: router, view: view, interactor: interactor)
+        
+        view.output = presenter
+        interactor.output = presenter
+        
+        return view
     }
     
     func createDetailModule() -> UIViewController {

@@ -1,6 +1,6 @@
 import UIKit
 
-protocol RouterProtocol {
+protocol RouterProtocol: AnyObject {
     func showMainModule()
     func showDetailModule()
 }
