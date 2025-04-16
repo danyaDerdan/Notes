@@ -1,7 +1,7 @@
 struct ToDoResponse: Decodable {
-    let todos: [ToDo]
+    let todos: [ToDoModel]
     
-    struct ToDo: Decodable {
+    struct ToDoModel: Decodable {
         let id: Int
         let todo: String
         let completed: Bool

@@ -13,8 +13,23 @@ protocol MainInteractorOutput: AnyObject {
 final class MainInteractor: MainInteractorInput {
     weak var output: MainInteractorOutput?
     var networkService: NetworkService?
+    var coreDataManager: CoreDataManager?
     
     func fetchData() {
+        let savedNotes = coreDataManager?.fetchData() ?? []
+        if savedNotes.isEmpty {
+            getDataFromNetwork()
+        } else {
+            output?.didRecieveData(data: savedNotes.map {$0.body ?? "" })
+        }
+    }
+    
+    func saveString(_ string: String) {
+        //Saving
+        output?.didRecieveData(data: ["Data saved"])
+    }
+    
+    private func getDataFromNetwork() {
         networkService?.fetchData(from: "https://dummyjson.com/todos") { result in
             switch result {
             case .failure(let error): print(error.localizedDescription)
@@ -26,12 +41,6 @@ final class MainInteractor: MainInteractorInput {
             }
         }
     }
-    
-    func saveString(_ string: String) {
-        //Saving
-        output?.didRecieveData(data: ["Data saved"])
-    }
-    
     
 }
 
