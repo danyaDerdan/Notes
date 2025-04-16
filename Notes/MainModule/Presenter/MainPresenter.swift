@@ -14,13 +14,15 @@ final class MainPresenter {
 
 extension MainPresenter: MainInteractorOutput {
     func didRecieveData(data: [String]) {
-//        router.showMainModule(data: data)
-        print("Presenter recieved from interactor data: \(data)")
         view.updateView(with: data)
     }
 }
 
 extension MainPresenter: MainViewOutput {
+    func viewDidLoad() {
+        interactor.fetchData()
+    }
+    
     func tappedNote(with text: String) {
         print("Presenter recieved from view text: \(text)")
         interactor.fetchData()

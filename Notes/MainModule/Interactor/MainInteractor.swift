@@ -1,3 +1,5 @@
+import Foundation
+
 protocol MainInteractorInput {
     var output: MainInteractorOutput? { get set}
     func fetchData()
@@ -15,8 +17,12 @@ final class MainInteractor: MainInteractorInput {
     func fetchData() {
         networkService?.fetchData(from: "https://dummyjson.com/todos") { result in
             switch result {
-            case .success(let data): print(data.todos[0].todo)
             case .failure(let error): print(error.localizedDescription)
+            case .success(let data):
+                DispatchQueue.main.async {
+                    self.output?.didRecieveData(data: data.todos.map {$0.todo})
+                }
+            
             }
         }
     }
