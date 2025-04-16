@@ -10,9 +10,15 @@ protocol MainInteractorOutput: AnyObject {
 
 final class MainInteractor: MainInteractorInput {
     weak var output: MainInteractorOutput?
+    var networkService: NetworkService?
     
     func fetchData() {
-        output?.didRecieveData(data: ["1", "2", "3", "4", "5"])
+        networkService?.fetchData(from: "https://dummyjson.com/todos") { result in
+            switch result {
+            case .success(let data): print(data.todos[0].todo)
+            case .failure(let error): print(error.localizedDescription)
+            }
+        }
     }
     
     func saveString(_ string: String) {

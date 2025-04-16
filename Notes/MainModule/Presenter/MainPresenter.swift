@@ -23,7 +23,7 @@ extension MainPresenter: MainInteractorOutput {
 extension MainPresenter: MainViewOutput {
     func tappedNote(with text: String) {
         print("Presenter recieved from view text: \(text)")
-        interactor.saveString(text)
+        interactor.fetchData()
     }
     
     
