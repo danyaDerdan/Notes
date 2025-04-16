@@ -2,20 +2,21 @@ import UIKit
 
 protocol MainViewInput {
     var output: MainViewOutput? { get }
-    func updateView(with data: [String])
+    func updateView(with data: [ViewData.Note])
 }
 
 protocol MainViewOutput {
     func tappedNote(with text: String)
+    func toggledNote(title: String?)
     func viewDidLoad()
 }
 
 class MainViewController: UIViewController, MainViewInput {
     var output: MainViewOutput?
-    private var tasks: [String] = []
+    private var tasks: [ViewData.Note] = []
     private lazy var tableView = createTableView()
     
-    func updateView(with data: [String]) {
+    func updateView(with data: [ViewData.Note]) {
         tasks = data
         tableView.reloadData()
     }
@@ -59,8 +60,15 @@ extension MainViewController: UITableViewDataSource {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath) as? TableCell else {
             return UITableViewCell()
         }
-        cell.configure(with: tasks[indexPath.row])
+        cell.configure(with: tasks[indexPath.row], output: self)
         return cell
+    }
+}
+
+extension MainViewController: TableCellOutput {
+    func didTapButton(in cell: TableCell) {
+        output?.toggledNote(title: cell.titleLabel.text)
+        tableView.reloadData()
     }
     
     

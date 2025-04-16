@@ -3,11 +3,11 @@ import Foundation
 protocol MainInteractorInput {
     var output: MainInteractorOutput? { get set}
     func fetchData()
-    func saveString(_ string: String)
+    func toggleNoteWith(title: String)
 }
 
 protocol MainInteractorOutput: AnyObject {
-    func didRecieveData(data: [String])
+    func didRecieveData(data: [ViewData.Note])
 }
 
 final class MainInteractor: MainInteractorInput {
@@ -20,13 +20,13 @@ final class MainInteractor: MainInteractorInput {
         if savedNotes.isEmpty {
             getDataFromNetwork()
         } else {
-            output?.didRecieveData(data: savedNotes.map {$0.body ?? "" })
+            output?.didRecieveData(data: getNotes(from: savedNotes))
         }
     }
     
-    func saveString(_ string: String) {
-        //Saving
-        output?.didRecieveData(data: ["Data saved"])
+    func toggleNoteWith(title: String) {
+        coreDataManager?.toggleToDo(title: title)
+        fetchData()
     }
     
     private func getDataFromNetwork() {
@@ -35,11 +35,34 @@ final class MainInteractor: MainInteractorInput {
             case .failure(let error): print(error.localizedDescription)
             case .success(let data):
                 DispatchQueue.main.async {
-                    self.output?.didRecieveData(data: data.todos.map {$0.todo})
+                    for toDo in data.todos {
+                        self.coreDataManager?.saveData(title: toDo.todo,
+                                                       body: "\n\n",
+                                                       date: self.getCurrentDate(),
+                                                       isDone: false)
+                    }
+                    self.fetchData()
                 }
-            
             }
         }
+    }
+    
+    private func getCurrentDate() -> String{
+        let formatter = DateFormatter()
+        formatter.dateFormat = "dd/MM/yyyy"
+        let formattedDate = formatter.string(from: Date())
+        return formattedDate
+    }
+    
+    private func getNotes(from data: [ToDo]) -> [ViewData.Note] {
+        var notes = [ViewData.Note]()
+        for note in data {
+            notes.append(ViewData.Note(title: note.title ?? "",
+                                       body: note.body ?? "",
+                                       date: note.date ?? "",
+                                       isDone: note.isDone))
+        }
+        return notes
     }
     
 }

@@ -4,6 +4,7 @@ protocol CoreDataManagerProtocol {
     func fetchData() -> [ToDo]
     func saveData(title: String, body: String, date: String, isDone: Bool)
     func deleteToDo(title: String)
+    func toggleToDo(title: String)
 }
 
 final class CoreDataManager: CoreDataManagerProtocol {
@@ -59,13 +60,25 @@ final class CoreDataManager: CoreDataManagerProtocol {
         return array
     }
     
+    func toggleToDo(title: String) {
+        findToDoWith(title: title) { toDo in
+            toDo.isDone.toggle()
+        }
+    }
+    
     func deleteToDo(title: String) {
+        findToDoWith(title: title) { toDo in
+            context.delete(toDo)
+        }
+    }
+    
+    private func findToDoWith(title: String, action: (ToDo) -> Void) {
         let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "ToDo")
         do {
             let results = try context.fetch(fetchRequest) as? [ToDo]
             for result in results ?? [] {
                 if result.title == title {
-                    context.delete(result)
+                    action(result)
                     saveContext()
                     break
                 }
