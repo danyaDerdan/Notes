@@ -24,13 +24,12 @@ extension MainPresenter: MainViewOutput {
         interactor.fetchData()
     }
     
-    func tappedNote(with text: String) {
-        print("Presenter recieved from view text: \(text)")
+    func tappedNote(title: String?, date: String?, body: String?) {
+        router?.showDetailModule(title: title ?? "", date: date ?? "", body: body ?? "")
     }
     
     func toggledNote(title: String?) {
         interactor.toggleNoteWith(title: title ?? "")
-        router?.showDetailModule(title: title ?? "")
     }
     
 }

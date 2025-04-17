@@ -2,7 +2,7 @@ import UIKit
 
 protocol AssemblyProtocol {
     func createMainModule() -> UIViewController
-    func createDetailModule(title: String) -> UIViewController
+    func createDetailModule(title: String, date: String, body: String) -> UIViewController
 }
 
 final class Assembly: AssemblyProtocol {
@@ -24,7 +24,7 @@ final class Assembly: AssemblyProtocol {
         return view
     }
     
-    func createDetailModule(title: String) -> UIViewController {
+    func createDetailModule(title: String, date: String, body: String) -> UIViewController {
         let view = DetailViewController()
         let interactor = DetailInteractor()
         
@@ -32,6 +32,10 @@ final class Assembly: AssemblyProtocol {
         
         view.output = presenter
         interactor.output = presenter
+        interactor.coreDataManager = coreDataManager
+        interactor.title = title
+        interactor.date = date
+        interactor.body = body
         
         return view
 

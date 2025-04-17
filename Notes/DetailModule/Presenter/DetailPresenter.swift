@@ -14,7 +14,7 @@ final class DetailPresenter {
 extension DetailPresenter: DetailViewOutput {
     
     func viewDidLoad() {
-        interactor.output?.test()
+        interactor.fetchData()
     }
     
     func didTapBackButton(title: String) {
@@ -23,8 +23,8 @@ extension DetailPresenter: DetailViewOutput {
 }
 
 extension DetailPresenter: DetailInteractorOutput {
-    func test() {
-        print("Connected")
+    func dataReceived(title: String, date: String, body: String) {
+        view?.updateData(title: title, date: date, body: body)
     }
 }
 

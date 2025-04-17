@@ -6,7 +6,7 @@ protocol MainViewInput: AnyObject {
 }
 
 protocol MainViewOutput {
-    func tappedNote(with text: String)
+    func tappedNote(title: String?, date: String?, body: String?)
     func toggledNote(title: String?)
     func viewDidLoad()
 }
@@ -62,6 +62,12 @@ extension MainViewController: UITableViewDataSource {
         }
         cell.configure(with: tasks[indexPath.row], output: self)
         return cell
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        output?.tappedNote(title: tasks[indexPath.row].title,
+                           date: tasks[indexPath.row].date,
+                           body: tasks[indexPath.row].body)
     }
 }
 
