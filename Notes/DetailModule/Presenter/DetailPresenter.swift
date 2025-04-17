@@ -1,10 +1,10 @@
 final class DetailPresenter {
     
-    var view: DetailViewInput
+    weak var view: DetailViewInput?
     var interactor: DetailInteractorInput
     var router: RouterProtocol?
     
-    init(view: DetailViewInput, interactor: DetailInteractorInput, router: RouterProtocol?) {
+    init(view: DetailViewInput?, interactor: DetailInteractorInput, router: RouterProtocol?) {
         self.view = view
         self.interactor = interactor
         self.router = router
@@ -12,6 +12,7 @@ final class DetailPresenter {
 }
 
 extension DetailPresenter: DetailViewOutput {
+    
     func viewDidLoad() {
         interactor.output?.test()
     }

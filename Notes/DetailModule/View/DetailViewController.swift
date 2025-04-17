@@ -1,6 +1,6 @@
 import UIKit
 
-protocol DetailViewInput {
+protocol DetailViewInput: AnyObject {
     var output: DetailViewOutput? { get set }
 }
 
@@ -17,5 +17,9 @@ class DetailViewController: UIViewController, DetailViewInput {
         super.viewDidLoad()
         view.backgroundColor = .systemCyan
         output?.viewDidLoad()
+    }
+    
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
     }
 }

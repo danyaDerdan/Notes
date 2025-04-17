@@ -1,6 +1,6 @@
 import UIKit
 
-protocol MainViewInput {
+protocol MainViewInput: AnyObject {
     var output: MainViewOutput? { get }
     func updateView(with data: [ViewData.Note])
 }

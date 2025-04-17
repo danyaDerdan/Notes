@@ -2,10 +2,10 @@
 final class MainPresenter {
     
     var router: RouterProtocol?
-    var view: MainViewInput
+    weak var view: MainViewInput?
     var interactor: MainInteractorInput
     
-    init(router: RouterProtocol?, view: MainViewInput, interactor: MainInteractorInput) {
+    init(router: RouterProtocol?, view: MainViewInput?, interactor: MainInteractorInput) {
         self.router = router
         self.view = view
         self.interactor = interactor
@@ -14,7 +14,7 @@ final class MainPresenter {
 
 extension MainPresenter: MainInteractorOutput {
     func didRecieveData(data: [ViewData.Note]) {
-        view.updateView(with: data)
+        view?.updateView(with: data)
     }
 }
 
