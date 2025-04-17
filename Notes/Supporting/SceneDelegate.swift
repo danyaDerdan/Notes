@@ -16,9 +16,10 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         guard let windowScene = (scene as? UIWindowScene) else { return }
         window = UIWindow(windowScene: windowScene)
         let assembly = Assembly()
-        let navigationController = UINavigationController(rootViewController: assembly.createMainModule())
+        let navigationController = UINavigationController()
         let router = MainRouter(navigationController: navigationController, assembly: assembly)
-        assembly.router = router
+        assembly.router = router //Намеренный Retain Cycle, вызываемый один раз для взаимного удерживания Router и Assembly на весь Lify cycle
+        router.showMainModule()
         window?.rootViewController = navigationController
         window?.makeKeyAndVisible()
     }

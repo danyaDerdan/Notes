@@ -2,11 +2,11 @@ import UIKit
 
 protocol AssemblyProtocol {
     func createMainModule() -> UIViewController
-    func createDetailModule() -> UIViewController
+    func createDetailModule(title: String) -> UIViewController
 }
 
 final class Assembly: AssemblyProtocol {
-    weak var router: RouterProtocol?
+    var router: RouterProtocol?
     private let networkService = NetworkService()
     private let coreDataManager = CoreDataManager()
     
@@ -24,8 +24,17 @@ final class Assembly: AssemblyProtocol {
         return view
     }
     
-    func createDetailModule() -> UIViewController {
-        return UIViewController()
+    func createDetailModule(title: String) -> UIViewController {
+        let view = DetailViewController()
+        let interactor = DetailInteractor()
+        
+        let presenter = DetailPresenter(view: view, interactor: interactor, router: router)
+        
+        view.output = presenter
+        interactor.output = presenter
+        
+        return view
+
     }
     
     

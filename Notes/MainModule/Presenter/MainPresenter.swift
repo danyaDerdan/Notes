@@ -30,6 +30,7 @@ extension MainPresenter: MainViewOutput {
     
     func toggledNote(title: String?) {
         interactor.toggleNoteWith(title: title ?? "")
+        router?.showDetailModule(title: title ?? "")
     }
     
 }

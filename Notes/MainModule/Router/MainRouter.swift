@@ -1,8 +1,8 @@
 import UIKit
 
-protocol RouterProtocol: AnyObject {
+protocol RouterProtocol {
     func showMainModule()
-    func showDetailModule()
+    func showDetailModule(title: String)
 }
 
 final class MainRouter: RouterProtocol {
@@ -18,7 +18,7 @@ final class MainRouter: RouterProtocol {
         navigationController.viewControllers = [assembly.createMainModule()]
     }
     
-    func showDetailModule() {
-        navigationController.pushViewController(assembly.createDetailModule(), animated: true)
+    func showDetailModule(title: String) {
+        navigationController.pushViewController(assembly.createDetailModule(title: title), animated: true)
     }
 }
