@@ -5,6 +5,7 @@ protocol MainInteractorInput {
     func fetchData()
     func toggleNoteWith(title: String)
     func getCurrentDate() -> String
+    func deleteTask(with title: String)
 }
 
 protocol MainInteractorOutput: AnyObject {
@@ -29,6 +30,10 @@ final class MainInteractor: MainInteractorInput {
     func toggleNoteWith(title: String) {
         coreDataManager?.toggleToDo(title: title)
         fetchData()
+    }
+    
+    func deleteTask(with title: String) {
+        coreDataManager?.deleteToDo(title: title)
     }
     
     private func getDataFromNetwork() {

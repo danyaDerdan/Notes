@@ -10,6 +10,7 @@ protocol MainViewOutput {
     func toggledNote(title: String?)
     func viewDidLoad()
     func tappedNewNote()
+    func deletedNoteWith(title: String)
 }
 
 class MainViewController: UIViewController, MainViewInput {
@@ -110,9 +111,9 @@ extension MainViewController: UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        output?.tappedNote(title: tasks[indexPath.row].title,
-                           date: tasks[indexPath.row].date,
-                           body: tasks[indexPath.row].body)
+        output?.tappedNote(title: (searchController.isActive ? filteredNotes : tasks)[indexPath.row].title,
+                           date: (searchController.isActive ? filteredNotes : tasks)[indexPath.row].date,
+                           body: (searchController.isActive ? filteredNotes : tasks)[indexPath.row].body)
     }
     
  
@@ -123,9 +124,13 @@ extension MainViewController: UITableViewDataSource {
         
         let deleteAction = UIContextualAction( style: .destructive, title: "Удалить") { [weak self] (_, _, completion) in
             guard let self else { return }
-            
-            tasks.remove(at: indexPath.row)
-            
+            if searchController.isActive {
+                output?.deletedNoteWith(title: filteredNotes[indexPath.row].title)
+                filteredNotes.remove(at: indexPath.row)
+            } else {
+                output?.deletedNoteWith(title: tasks[indexPath.row].title)
+                tasks.remove(at: indexPath.row)
+            }
             tableView.deleteRows(at: [indexPath], with: .automatic)
             completion(true)
         }
@@ -136,6 +141,7 @@ extension MainViewController: UITableViewDataSource {
         let config = UISwipeActionsConfiguration(actions: [deleteAction])
         return config
     }
+    
 }
 
 extension MainViewController: TableCellOutput {
