@@ -3,11 +3,12 @@ import UIKit
 protocol DetailViewInput: AnyObject {
     var output: DetailViewOutput? { get set }
     func updateData(title: String, date: String, body: String)
+    func showAlert(message: String)
 }
 
 protocol DetailViewOutput: AnyObject {
     func viewDidLoad()
-    func didTapBackButton(title: String)
+    func viewDidDisappear(title: String?, date: String?, body: String?)
 }
 
 class DetailViewController: UIViewController, DetailViewInput {
@@ -28,6 +29,18 @@ class DetailViewController: UIViewController, DetailViewInput {
         titleField.text = title
         dateLabel.text = date
         self.body.text = body
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        output?.viewDidDisappear(title: titleField.text, date: dateLabel.text, body: body.text)
+    }
+    
+    func showAlert(message: String) {
+        let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        let okAction = UIAlertAction(title: "ОК", style: .default, handler: nil)
+        alert.addAction(okAction)
+        present(alert, animated: true)
     }
 }
 

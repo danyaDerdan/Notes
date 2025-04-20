@@ -2,7 +2,7 @@ import UIKit
 
 protocol RouterProtocol {
     func showMainModule()
-    func showDetailModule(title: String, date: String, body: String)
+    func showDetailModule(title: String, date: String, body: String, onDisappear: (() -> ())?)
 }
 
 final class MainRouter: RouterProtocol {
@@ -18,7 +18,7 @@ final class MainRouter: RouterProtocol {
         navigationController.viewControllers = [assembly.createMainModule()]
     }
     
-    func showDetailModule(title: String, date: String, body: String) {
-        navigationController.pushViewController(assembly.createDetailModule(title: title, date: date, body: body), animated: true)
+    func showDetailModule(title: String, date: String, body: String, onDisappear: (() -> ())?) {
+        navigationController.pushViewController(assembly.createDetailModule(title: title, date: date, body: body, onDisappear: onDisappear), animated: true)
     }
 }

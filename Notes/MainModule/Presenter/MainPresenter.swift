@@ -25,7 +25,7 @@ extension MainPresenter: MainViewOutput {
     }
     
     func tappedNote(title: String?, date: String?, body: String?) {
-        router?.showDetailModule(title: title ?? "", date: date ?? "", body: body ?? "")
+        router?.showDetailModule(title: title ?? "", date: date ?? "", body: body ?? "", onDisappear: interactor.fetchData)
     }
     
     func toggledNote(title: String?) {
