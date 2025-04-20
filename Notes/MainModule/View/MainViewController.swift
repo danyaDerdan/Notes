@@ -114,6 +114,28 @@ extension MainViewController: UITableViewDataSource {
                            date: tasks[indexPath.row].date,
                            body: tasks[indexPath.row].body)
     }
+    
+ 
+    
+    func tableView(_ tableView: UITableView,
+        trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath
+    ) -> UISwipeActionsConfiguration? {
+        
+        let deleteAction = UIContextualAction( style: .destructive, title: "Удалить") { [weak self] (_, _, completion) in
+            guard let self else { return }
+            
+            tasks.remove(at: indexPath.row)
+            
+            tableView.deleteRows(at: [indexPath], with: .automatic)
+            completion(true)
+        }
+        
+        deleteAction.image = UIImage(systemName: "trash")
+        deleteAction.backgroundColor = .systemRed
+    
+        let config = UISwipeActionsConfiguration(actions: [deleteAction])
+        return config
+    }
 }
 
 extension MainViewController: TableCellOutput {
