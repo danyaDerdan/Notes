@@ -13,12 +13,15 @@ protocol MainViewOutput {
 }
 
 class MainViewController: UIViewController, MainViewInput {
+    private let searchController = UISearchController(searchResultsController: nil)
     var output: MainViewOutput?
     private var tasks: [ViewData.Note] = []
+    private var filteredNotes: [ViewData.Note] = []
     private lazy var tableView = createTableView()
     
     func updateView(with data: [ViewData.Note]) {
         tasks = data
+        filterNotes(for: searchController.searchBar.text ?? "")
         tableView.reloadData()
     }
     
@@ -29,6 +32,7 @@ class MainViewController: UIViewController, MainViewInput {
         title = "Заметки"
         navigationController?.navigationBar.prefersLargeTitles = true
         setupPanel()
+        setupSearchController()
     }
 
 }
@@ -82,18 +86,26 @@ private extension MainViewController {
     @objc func noteButtonTapped() {
         output?.tappedNewNote()
     }
+    private func setupSearchController() {
+        searchController.searchResultsUpdater = self
+        searchController.obscuresBackgroundDuringPresentation = false
+        searchController.searchBar.placeholder = "Поиск заметок"
+        navigationItem.searchController = searchController
+        definesPresentationContext = true
+        }
 }
 
 extension MainViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        tasks.count
+        searchController.isActive ? filteredNotes.count : tasks.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath) as? TableCell else {
             return UITableViewCell()
         }
-        cell.configure(with: tasks[indexPath.row], output: self)
+        let note = searchController.isActive ? filteredNotes[indexPath.row] : tasks[indexPath.row]
+        cell.configure(with: note, output: self)
         return cell
     }
     
@@ -107,8 +119,23 @@ extension MainViewController: UITableViewDataSource {
 extension MainViewController: TableCellOutput {
     func didTapButton(in cell: TableCell) {
         output?.toggledNote(title: cell.titleLabel.text)
-        tableView.reloadData()
+    }
+}
+
+extension MainViewController: UISearchResultsUpdating {
+    func updateSearchResults(for searchController: UISearchController) {
+        let searchText = searchController.searchBar.text ?? ""
+        filterNotes(for: searchText)
     }
     
-    
+    private func filterNotes(for searchText: String) {
+        if searchText.isEmpty {
+            filteredNotes = tasks
+        } else {
+            filteredNotes = tasks.filter {
+                $0.title.lowercased().contains(searchText.lowercased())
+            }
+        }
+        tableView.reloadData()
+    }
 }
