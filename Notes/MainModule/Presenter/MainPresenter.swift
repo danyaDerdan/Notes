@@ -35,4 +35,8 @@ extension MainPresenter: MainViewOutput {
     func tappedNewNote() {
         router?.showDetailModule(title: "", date: interactor.getCurrentDate(), body: "", onDisappear: interactor.fetchData)
     }
+    
+    func deletedNoteWith(title: String) {
+        interactor.deleteTask(with: title)
+    }
 }
