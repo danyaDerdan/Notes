@@ -1,14 +1,15 @@
 import UIKit
 
-protocol MainViewInput {
+protocol MainViewInput: AnyObject {
     var output: MainViewOutput? { get }
     func updateView(with data: [ViewData.Note])
 }
 
 protocol MainViewOutput {
-    func tappedNote(with text: String)
+    func tappedNote(title: String?, date: String?, body: String?)
     func toggledNote(title: String?)
     func viewDidLoad()
+    func tappedNewNote()
 }
 
 class MainViewController: UIViewController, MainViewInput {
@@ -27,6 +28,7 @@ class MainViewController: UIViewController, MainViewInput {
         output?.viewDidLoad()
         title = "Заметки"
         navigationController?.navigationBar.prefersLargeTitles = true
+        setupPanel()
     }
 
 }
@@ -43,11 +45,42 @@ private extension MainViewController {
         tableView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             tableView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
-            tableView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
+            tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -80),
             tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor)
             ])
         return tableView
+    }
+    
+    func setupPanel() {
+        let panel = UIView()
+        panel.backgroundColor = .systemGray6
+        view.addSubview(panel)
+        panel.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            panel.topAnchor.constraint(equalTo: tableView.bottomAnchor),
+            panel.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            panel.widthAnchor.constraint(equalTo: view.widthAnchor),
+            panel.centerXAnchor.constraint(equalTo: view.centerXAnchor)
+        ])
+        
+        let button = UIButton(type: .system)
+        button.tintColor = .systemYellow
+        button.contentMode = .scaleAspectFit
+        panel.addSubview(button)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            button.widthAnchor.constraint(equalToConstant: 80),
+            button.heightAnchor.constraint(equalToConstant: 80),
+            button.topAnchor.constraint(equalTo: panel.topAnchor, constant: 5),
+            button.trailingAnchor.constraint(equalTo: panel.trailingAnchor, constant: -5)
+        ])
+        button.setImage(UIImage(systemName: "square.and.pencil"), for: .normal)
+        button.addTarget(self, action: #selector(noteButtonTapped), for: .touchUpInside)
+    }
+    
+    @objc func noteButtonTapped() {
+        output?.tappedNewNote()
     }
 }
 
@@ -62,6 +95,12 @@ extension MainViewController: UITableViewDataSource {
         }
         cell.configure(with: tasks[indexPath.row], output: self)
         return cell
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        output?.tappedNote(title: tasks[indexPath.row].title,
+                           date: tasks[indexPath.row].date,
+                           body: tasks[indexPath.row].body)
     }
 }
 

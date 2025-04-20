@@ -2,10 +2,10 @@
 final class MainPresenter {
     
     var router: RouterProtocol?
-    var view: MainViewInput
+    weak var view: MainViewInput?
     var interactor: MainInteractorInput
     
-    init(router: RouterProtocol?, view: MainViewInput, interactor: MainInteractorInput) {
+    init(router: RouterProtocol?, view: MainViewInput?, interactor: MainInteractorInput) {
         self.router = router
         self.view = view
         self.interactor = interactor
@@ -14,7 +14,7 @@ final class MainPresenter {
 
 extension MainPresenter: MainInteractorOutput {
     func didRecieveData(data: [ViewData.Note]) {
-        view.updateView(with: data)
+        view?.updateView(with: data)
     }
 }
 
@@ -24,12 +24,15 @@ extension MainPresenter: MainViewOutput {
         interactor.fetchData()
     }
     
-    func tappedNote(with text: String) {
-        print("Presenter recieved from view text: \(text)")
+    func tappedNote(title: String?, date: String?, body: String?) {
+        router?.showDetailModule(title: title ?? "", date: date ?? "", body: body ?? "", onDisappear: interactor.fetchData)
     }
     
     func toggledNote(title: String?) {
         interactor.toggleNoteWith(title: title ?? "")
     }
     
+    func tappedNewNote() {
+        router?.showDetailModule(title: "", date: interactor.getCurrentDate(), body: "", onDisappear: interactor.fetchData)
+    }
 }

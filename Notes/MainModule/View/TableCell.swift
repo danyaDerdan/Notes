@@ -108,4 +108,3 @@ private extension TableCell {
         dateLabel.textColor = .black.withAlphaComponent(isDone ? 0.5 : 1)
     }
 }
-

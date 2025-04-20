@@ -5,6 +5,8 @@ protocol CoreDataManagerProtocol {
     func saveData(title: String, body: String, date: String, isDone: Bool)
     func deleteToDo(title: String)
     func toggleToDo(title: String)
+    func isToDoExist(title: String) -> Bool
+    func updateData(oldTitle: String, newTitle: String, body: String, date: String)
 }
 
 final class CoreDataManager: CoreDataManagerProtocol {
@@ -69,6 +71,22 @@ final class CoreDataManager: CoreDataManagerProtocol {
     func deleteToDo(title: String) {
         findToDoWith(title: title) { toDo in
             context.delete(toDo)
+        }
+    }
+    
+    func isToDoExist(title: String) -> Bool {
+        var flag = false
+        findToDoWith(title: title) { _ in
+            flag = true
+        }
+        return flag
+    }
+    
+    func updateData(oldTitle: String, newTitle: String, body: String, date: String) {
+        findToDoWith(title: oldTitle) { toDo in
+            toDo.title = newTitle
+            toDo.body = body
+            toDo.date = date
         }
     }
     
