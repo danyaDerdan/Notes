@@ -4,10 +4,12 @@ protocol MainInteractorInput {
     var output: MainInteractorOutput? { get set}
     func fetchData()
     func toggleNoteWith(title: String)
+    func getCurrentDate() -> String
 }
 
 protocol MainInteractorOutput: AnyObject {
     func didRecieveData(data: [ViewData.Note])
+
 }
 
 final class MainInteractor: MainInteractorInput {
@@ -20,7 +22,7 @@ final class MainInteractor: MainInteractorInput {
         if savedNotes.isEmpty {
             getDataFromNetwork()
         } else {
-            output?.didRecieveData(data: getNotes(from: savedNotes))
+            output?.didRecieveData(data: getNotes(from: savedNotes.reversed()))
         }
     }
     
@@ -47,7 +49,7 @@ final class MainInteractor: MainInteractorInput {
         }
     }
     
-    private func getCurrentDate() -> String{
+    func getCurrentDate() -> String{
         let formatter = DateFormatter()
         formatter.dateFormat = "dd/MM/yyyy"
         let formattedDate = formatter.string(from: Date())

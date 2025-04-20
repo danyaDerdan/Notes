@@ -9,6 +9,7 @@ protocol MainViewOutput {
     func tappedNote(title: String?, date: String?, body: String?)
     func toggledNote(title: String?)
     func viewDidLoad()
+    func tappedNewNote()
 }
 
 class MainViewController: UIViewController, MainViewInput {
@@ -79,7 +80,7 @@ private extension MainViewController {
     }
     
     @objc func noteButtonTapped() {
-//        print("Tapped")
+        output?.tappedNewNote()
     }
 }
 

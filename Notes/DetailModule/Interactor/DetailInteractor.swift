@@ -25,6 +25,9 @@ final class DetailInteractor: DetailInteractorInput {
             notifyInvalidData(title: title)
             return }
         coreDataManager?.updateData(oldTitle: self.title, newTitle: title, body: body, date: date)
+        if self.title == "" {
+            coreDataManager?.saveData(title: title, body: body, date: date, isDone: false)
+        }
     }
     
     private func checkUniqTitle(_ title: String) -> Bool {

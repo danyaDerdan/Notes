@@ -32,4 +32,7 @@ extension MainPresenter: MainViewOutput {
         interactor.toggleNoteWith(title: title ?? "")
     }
     
+    func tappedNewNote() {
+        router?.showDetailModule(title: "", date: interactor.getCurrentDate(), body: "", onDisappear: interactor.fetchData)
+    }
 }
