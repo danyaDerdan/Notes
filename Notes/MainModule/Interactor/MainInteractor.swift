@@ -10,13 +10,12 @@ protocol MainInteractorInput {
 
 protocol MainInteractorOutput: AnyObject {
     func didRecieveData(data: [ViewData.Note])
-
 }
 
 final class MainInteractor: MainInteractorInput {
     weak var output: MainInteractorOutput?
-    var networkService: NetworkService?
-    var coreDataManager: CoreDataManager?
+    var networkService: NetworkServiceProtocol?
+    var coreDataManager: CoreDataManagerProtocol?
     
     func fetchData() {
         let savedNotes = coreDataManager?.fetchData() ?? []

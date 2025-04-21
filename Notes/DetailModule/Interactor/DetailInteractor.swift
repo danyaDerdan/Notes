@@ -11,7 +11,7 @@ protocol DetailInteractorOutput: AnyObject {
 
 final class DetailInteractor: DetailInteractorInput {
     weak var output: DetailInteractorOutput?
-    var coreDataManager: CoreDataManager?
+    var coreDataManager: CoreDataManagerProtocol?
     var title: String = ""
     var date: String = ""
     var body: String = ""
