@@ -33,6 +33,9 @@ final class MainInteractor: MainInteractorInput {
     
     func deleteTask(with title: String) {
         coreDataManager?.deleteToDo(title: title)
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+            self.fetchData()
+        }
     }
     
     private func getDataFromNetwork() {
