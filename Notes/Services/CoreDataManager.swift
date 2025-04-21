@@ -10,7 +10,7 @@ protocol CoreDataManagerProtocol {
 }
 
 final class CoreDataManager: CoreDataManagerProtocol {
-    private lazy var context: NSManagedObjectContext = {
+    lazy var context: NSManagedObjectContext = {
         persistentContainer.viewContext
     }()
     
@@ -18,7 +18,7 @@ final class CoreDataManager: CoreDataManagerProtocol {
         return NSEntityDescription.entity(forEntityName: entityName, in: context) ?? NSEntityDescription()
     }
 
-    private lazy var persistentContainer: NSPersistentContainer = {
+    lazy var persistentContainer: NSPersistentContainer = {
         let container = NSPersistentContainer(name: "Notes")
         container.loadPersistentStores(completionHandler: { (storeDescription, error) in
             if let error = error as NSError? {
