@@ -19,11 +19,19 @@ class MainViewController: UIViewController, MainViewInput {
     private var tasks: [ViewData.Note] = []
     private var filteredNotes: [ViewData.Note] = []
     private lazy var tableView = createTableView()
+    private let countLabel: UILabel = {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.font = .systemFont(ofSize: 17, weight: .medium)
+        label.textColor = .label
+        return label
+    }()
     
     func updateView(with data: [ViewData.Note]) {
         tasks = data
         filterNotes(for: searchController.searchBar.text ?? "")
         tableView.reloadData()
+        countLabel.text = "\((searchController.isActive ? filteredNotes : tasks).count) notes"
     }
     
     override func viewDidLoad() {
@@ -32,6 +40,7 @@ class MainViewController: UIViewController, MainViewInput {
         output?.viewDidLoad()
         title = "Заметки"
         navigationController?.navigationBar.prefersLargeTitles = true
+        navigationItem.hidesSearchBarWhenScrolling = false
         setupPanel()
         setupSearchController()
     }
@@ -61,12 +70,16 @@ private extension MainViewController {
         let panel = UIView()
         panel.backgroundColor = .systemGray6
         view.addSubview(panel)
+        panel.addSubview(countLabel)
         panel.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             panel.topAnchor.constraint(equalTo: tableView.bottomAnchor),
             panel.bottomAnchor.constraint(equalTo: view.bottomAnchor),
             panel.widthAnchor.constraint(equalTo: view.widthAnchor),
-            panel.centerXAnchor.constraint(equalTo: view.centerXAnchor)
+            panel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            
+            countLabel.topAnchor.constraint(equalTo: panel.topAnchor, constant: 20),
+            countLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor)
         ])
         
         let button = UIButton(type: .system)
@@ -150,10 +163,12 @@ extension MainViewController: TableCellOutput {
     }
 }
 
-extension MainViewController: UISearchResultsUpdating {
+extension MainViewController: UISearchResultsUpdating, UISearchControllerDelegate {
     func updateSearchResults(for searchController: UISearchController) {
         let searchText = searchController.searchBar.text ?? ""
         filterNotes(for: searchText)
+        tableView.reloadData()
+        countLabel.text = "\(filteredNotes.count) of \(tasks.count) notes"
     }
     
     private func filterNotes(for searchText: String) {
@@ -164,6 +179,6 @@ extension MainViewController: UISearchResultsUpdating {
                 $0.title.lowercased().contains(searchText.lowercased())
             }
         }
-        tableView.reloadData()
     }
+
 }
