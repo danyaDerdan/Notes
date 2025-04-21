@@ -1,5 +1,3 @@
-import Foundation
-
 protocol DetailInteractorInput {
     var output: DetailInteractorOutput? { get set }
     func fetchData()
@@ -19,9 +17,7 @@ final class DetailInteractor: DetailInteractorInput {
     var body: String = ""
     
     func fetchData() {
-        DispatchQueue.main.async {
-            self.output?.dataReceived(title: self.title, date: self.date, body: self.body)
-        }
+        output?.dataReceived(title: title, date: date, body: body)
     }
     
     func saveData(title: String, date: String, body: String) {
